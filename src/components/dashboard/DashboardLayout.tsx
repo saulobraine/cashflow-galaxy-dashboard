@@ -1,15 +1,18 @@
 
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarTrigger } from "@/components/ui/sidebar";
 import { ChartBar, Wallet, CreditCard, DollarSign } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
-  { icon: ChartBar, label: "Visão Geral", href: "#overview" },
-  { icon: Wallet, label: "Carteira", href: "#wallet" },
-  { icon: CreditCard, label: "Transações", href: "#transactions" },
-  { icon: DollarSign, label: "Investimentos", href: "#investments" },
+  { icon: ChartBar, label: "Visão Geral", path: "/" },
+  { icon: Wallet, label: "Carteira", path: "/wallet" },
+  { icon: CreditCard, label: "Transações", path: "/transactions" },
+  { icon: DollarSign, label: "Investimentos", path: "/investments" },
 ];
 
 export const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -20,14 +23,14 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
           <SidebarContent>
             <nav className="space-y-1">
               {menuItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-secondary/10 transition-colors"
+                <button
+                  key={item.path}
+                  onClick={() => navigate(item.path)}
+                  className="flex w-full items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-secondary/10 transition-colors"
                 >
                   <item.icon className="h-5 w-5 mr-3" />
                   {item.label}
-                </a>
+                </button>
               ))}
             </nav>
           </SidebarContent>
