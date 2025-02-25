@@ -2,6 +2,7 @@
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard, TrendingDown, TrendingUp } from "lucide-react";
+import { AddTransactionDialog } from "@/components/transactions/AddTransactionDialog";
 
 const TransactionsPage = () => {
   const transactions = [
@@ -31,11 +32,14 @@ const TransactionsPage = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Transações</h1>
-          <p className="text-muted-foreground mt-2">
-            Acompanhe suas movimentações financeiras
-          </p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Transações</h1>
+            <p className="text-muted-foreground mt-2">
+              Acompanhe suas movimentações financeiras
+            </p>
+          </div>
+          <AddTransactionDialog />
         </div>
 
         <Card>

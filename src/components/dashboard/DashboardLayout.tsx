@@ -1,12 +1,13 @@
 
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarTrigger } from "@/components/ui/sidebar";
-import { ChartBar, Wallet, CreditCard, DollarSign } from "lucide-react";
+import { ChartBar, Wallet, CreditCard, DollarSign, FolderOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   { icon: ChartBar, label: "Visão Geral", path: "/" },
   { icon: Wallet, label: "Carteira", path: "/wallet" },
   { icon: CreditCard, label: "Transações", path: "/transactions" },
+  { icon: FolderOpen, label: "Categorias", path: "/categories" },
   { icon: DollarSign, label: "Investimentos", path: "/investments" },
 ];
 
@@ -44,4 +45,4 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
       </div>
     </SidebarProvider>
   );
-};
+}
