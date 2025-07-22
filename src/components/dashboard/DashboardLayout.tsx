@@ -1,6 +1,6 @@
 
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarTrigger } from "@/components/ui/sidebar";
-import { ChartBar, Wallet, CreditCard, FolderOpen } from "lucide-react";
+import { ChartBar, Wallet, CreditCard, FolderOpen, Receipt, Repeat } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { ThemeProvider } from "next-themes";
@@ -10,7 +10,8 @@ const menuItems = [
   { icon: Wallet, label: "Carteira", path: "/wallet" },
   { icon: CreditCard, label: "Transações", path: "/transactions" },
   { icon: FolderOpen, label: "Categorias", path: "/categories" },
-  
+  { icon: Receipt, label: "Contas a Receber", path: "/receivables" },
+  { icon: Repeat, label: "Pagamentos Recorrentes", path: "/recurring-payments" },
 ];
 
 export const DashboardLayout = ({ children }: { children: React.ReactNode }) => {

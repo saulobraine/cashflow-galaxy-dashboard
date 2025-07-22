@@ -8,7 +8,8 @@ import Index from "./pages/Index";
 import WalletPage from "./pages/Wallet";
 import TransactionsPage from "./pages/Transactions";
 import Categories from "./pages/Categories";
-
+import ReceivablesPage from "./pages/Receivables";
+import RecurringPaymentsPage from "./pages/RecurringPayments";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,7 +25,8 @@ const App = () => (
           <Route path="/wallet" element={<WalletPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/categories" element={<Categories />} />
-          
+          <Route path="/receivables" element={<ReceivablesPage />} />
+          <Route path="/recurring-payments" element={<RecurringPaymentsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
