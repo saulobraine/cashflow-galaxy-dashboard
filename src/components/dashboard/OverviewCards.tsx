@@ -11,13 +11,6 @@ const metrics = [
     trend: "up",
   },
   {
-    title: "Investimentos",
-    value: "R$ 45.000,00",
-    change: "+8,1%",
-    icon: TrendingUp,
-    trend: "up",
-  },
-  {
     title: "Gastos",
     value: "R$ 3.450,00",
     change: "-2,5%",

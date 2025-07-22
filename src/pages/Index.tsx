@@ -10,7 +10,7 @@ const Index = () => {
         <div>
           <h1 className="text-3xl font-bold">Bem-vindo ao seu Dashboard</h1>
           <p className="text-muted-foreground mt-2">
-            Acompanhe seus investimentos e finanças em um só lugar
+            Acompanhe suas finanças em um só lugar
           </p>
         </div>
         <OverviewCards />
