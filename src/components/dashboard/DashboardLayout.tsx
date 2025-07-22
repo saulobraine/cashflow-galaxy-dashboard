@@ -10,7 +10,7 @@ const menuItems = [
   { icon: Wallet, label: "Carteira", path: "/wallet" },
   { icon: CreditCard, label: "Transações", path: "/transactions" },
   { icon: FolderOpen, label: "Categorias", path: "/categories" },
-  { icon: DollarSign, label: "Investimentos", path: "/investments" },
+  
 ];
 
 export const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
