@@ -1,6 +1,6 @@
 
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarTrigger } from "@/components/ui/sidebar";
-import { ChartBar, Wallet, CreditCard, DollarSign, FolderOpen } from "lucide-react";
+import { ChartBar, Wallet, CreditCard, FolderOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { ThemeProvider } from "next-themes";
