@@ -1,6 +1,6 @@
 
 import { Card } from "@/components/ui/card";
-import { DollarSign, TrendingUp, CreditCard, Wallet } from "lucide-react";
+import { DollarSign, TrendingUp, CreditCard, Receipt } from "lucide-react";
 
 const metrics = [
   {
@@ -11,17 +11,24 @@ const metrics = [
     trend: "up",
   },
   {
-    title: "Gastos",
-    value: "R$ 3.450,00",
+    title: "Entradas",
+    value: "R$ 104.950,00",
+    change: "+15,2%",
+    icon: TrendingUp,
+    trend: "up",
+  },
+  {
+    title: "Saídas",
+    value: "R$ 20.000,00",
     change: "-2,5%",
     icon: CreditCard,
     trend: "down",
   },
   {
-    title: "Economia",
+    title: "A Receber",
     value: "R$ 12.500,00",
-    change: "+15,2%",
-    icon: Wallet,
+    change: "+8,1%",
+    icon: Receipt,
     trend: "up",
   },
 ];

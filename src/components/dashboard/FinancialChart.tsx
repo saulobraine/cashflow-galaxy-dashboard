@@ -3,13 +3,13 @@ import { Card } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const data = [
-  { name: "Jan", value: 45000 },
-  { name: "Fev", value: 52000 },
-  { name: "Mar", value: 49000 },
-  { name: "Abr", value: 63000 },
-  { name: "Mai", value: 58000 },
-  { name: "Jun", value: 71000 },
-  { name: "Jul", value: 84950 },
+  { name: "Jan", entradas: 65000, saidas: 20000 },
+  { name: "Fev", entradas: 72000, saidas: 20000 },
+  { name: "Mar", entradas: 69000, saidas: 20000 },
+  { name: "Abr", entradas: 83000, saidas: 20000 },
+  { name: "Mai", entradas: 78000, saidas: 20000 },
+  { name: "Jun", entradas: 91000, saidas: 20000 },
+  { name: "Jul", entradas: 104950, saidas: 20000 },
 ];
 
 export const FinancialChart = () => {
@@ -26,14 +26,25 @@ export const FinancialChart = () => {
               tickFormatter={(value) => `R$ ${value.toLocaleString()}`}
             />
             <Tooltip
-              formatter={(value: number) => [`R$ ${value.toLocaleString()}`, "Valor"]}
+              formatter={(value: number, name: string) => [
+                `R$ ${value.toLocaleString()}`, 
+                name === "entradas" ? "Entradas" : "Saídas"
+              ]}
             />
             <Line
               type="monotone"
-              dataKey="value"
-              stroke="#9b87f5"
+              dataKey="entradas"
+              stroke="#22c55e"
               strokeWidth={2}
-              dot={{ fill: "#9b87f5" }}
+              dot={{ fill: "#22c55e" }}
+              activeDot={{ r: 8 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="saidas"
+              stroke="#ef4444"
+              strokeWidth={2}
+              dot={{ fill: "#ef4444" }}
               activeDot={{ r: 8 }}
             />
           </LineChart>

@@ -34,10 +34,10 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
                   <button
                     key={item.path}
                     onClick={() => navigate(item.path)}
-                    className="flex w-full items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-secondary/10 transition-colors"
+                    className="flex w-full items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-secondary/10 transition-colors group-data-[state=collapsed]:justify-center group-data-[state=collapsed]:px-2"
                   >
-                    <item.icon className="h-5 w-5 mr-3" />
-                    {item.label}
+                    <item.icon className="h-5 w-5 group-data-[state=collapsed]:mr-0 mr-3" />
+                    <span className="group-data-[state=collapsed]:hidden">{item.label}</span>
                   </button>
                 ))}
               </nav>

@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Calendar, DollarSign, User, Clock } from "lucide-react";
+import { ArrowClockwise } from "phosphor-react";
 import { AddReceivableDialog } from "./AddReceivableDialog";
 
 interface Receivable {
@@ -12,6 +13,7 @@ interface Receivable {
   dueDate: string;
   client: string;
   status: "pending" | "received" | "overdue";
+  isRecurring?: boolean;
 }
 
 export function ReceivablesManager() {
@@ -22,7 +24,8 @@ export function ReceivablesManager() {
       amount: 2500.00,
       dueDate: "2024-01-15",
       client: "Empresa ABC",
-      status: "pending"
+      status: "pending",
+      isRecurring: true
     },
     {
       id: "2",
@@ -158,8 +161,13 @@ export function ReceivablesManager() {
                   </div>
                 </div>
                 <div className="text-right space-y-1">
-                  <div className="text-lg font-semibold text-primary">
-                    {formatCurrency(receivable.amount)}
+                  <div className="flex items-center gap-2 justify-end">
+                    <div className="text-lg font-semibold text-primary">
+                      {formatCurrency(receivable.amount)}
+                    </div>
+                    {receivable.isRecurring && (
+                      <ArrowClockwise size={16} className="text-primary" />
+                    )}
                   </div>
                   <div className="text-sm text-muted-foreground flex items-center gap-1">
                     <Calendar className="h-3 w-3" />

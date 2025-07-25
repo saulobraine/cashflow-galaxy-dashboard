@@ -26,7 +26,7 @@ export function FloatingMenu() {
               <Plus size={20} weight="bold" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="right">
             <p>Adicionar entrada</p>
           </TooltipContent>
         </Tooltip>
@@ -41,7 +41,7 @@ export function FloatingMenu() {
               <Minus size={20} weight="bold" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="right">
             <p>Adicionar saída</p>
           </TooltipContent>
         </Tooltip>
