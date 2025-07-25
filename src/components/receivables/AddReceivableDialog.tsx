@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface AddReceivableDialogProps {
   open: boolean;
@@ -15,6 +16,8 @@ interface AddReceivableDialogProps {
     dueDate: string;
     client: string;
     status: "pending" | "received" | "overdue";
+    isRecurring?: boolean;
+    frequency?: "monthly" | "quarterly" | "yearly";
   }) => void;
 }
 
@@ -25,12 +28,16 @@ export function AddReceivableDialog({ open, onOpenChange, onAdd }: AddReceivable
     dueDate: string;
     client: string;
     status: "pending" | "received" | "overdue";
+    isRecurring: boolean;
+    frequency: "monthly" | "quarterly" | "yearly";
   }>({
     description: "",
     amount: "",
     dueDate: "",
     client: "",
-    status: "pending"
+    status: "pending",
+    isRecurring: false,
+    frequency: "monthly"
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -41,14 +48,18 @@ export function AddReceivableDialog({ open, onOpenChange, onAdd }: AddReceivable
         amount: parseFloat(formData.amount),
         dueDate: formData.dueDate,
         client: formData.client,
-        status: formData.status
+        status: formData.status,
+        isRecurring: formData.isRecurring,
+        frequency: formData.isRecurring ? formData.frequency : undefined
       });
       setFormData({
         description: "",
         amount: "",
         dueDate: "",
         client: "",
-        status: "pending"
+        status: "pending",
+        isRecurring: false,
+        frequency: "monthly"
       });
       onOpenChange(false);
     }
@@ -125,6 +136,38 @@ export function AddReceivableDialog({ open, onOpenChange, onAdd }: AddReceivable
               </SelectContent>
             </Select>
           </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="isRecurring" 
+              checked={formData.isRecurring}
+              onCheckedChange={(checked) => 
+                setFormData({ ...formData, isRecurring: checked as boolean })
+              }
+            />
+            <Label htmlFor="isRecurring">Conta recorrente</Label>
+          </div>
+
+          {formData.isRecurring && (
+            <div className="space-y-2">
+              <Label htmlFor="frequency">Frequência</Label>
+              <Select 
+                value={formData.frequency} 
+                onValueChange={(value) => 
+                  setFormData({ ...formData, frequency: value as "monthly" | "quarterly" | "yearly" })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="monthly">Mensal</SelectItem>
+                  <SelectItem value="quarterly">Trimestral</SelectItem>
+                  <SelectItem value="yearly">Anual</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <div className="flex gap-2">
             <Button 
