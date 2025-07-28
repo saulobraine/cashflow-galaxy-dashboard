@@ -93,23 +93,16 @@ export function ReceivablesManager() {
   };
 
   const getStatusBadge = (status: Receivable["status"]) => {
-    const variants = {
-      pending: "default",
-      received: "secondary",
-      overdue: "destructive"
-    } as const;
-
-    const labels = {
-      pending: "Pendente",
-      received: "Recebido",
-      overdue: "Vencido"
-    };
-
-    return (
-      <Badge variant={variants[status]}>
-        {labels[status]}
-      </Badge>
-    );
+    switch (status) {
+      case "pending":
+        return <Badge variant="secondary">Pendente</Badge>;
+      case "received":
+        return <Badge variant="default">Recebido</Badge>;
+      case "overdue":
+        return <Badge variant="destructive">Vencido</Badge>;
+      default:
+        return <Badge variant="secondary">Pendente</Badge>;
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -149,8 +142,8 @@ export function ReceivablesManager() {
 
         <Card className="shadow-purple">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Valores Vencidos</CardTitle>
-            <Clock className="h-4 w-4 text-destructive" />
+            <CardTitle className="text-sm font-medium">Total em Atraso</CardTitle>
+            <Calendar className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-destructive">
