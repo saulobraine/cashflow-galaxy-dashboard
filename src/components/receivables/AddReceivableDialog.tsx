@@ -17,7 +17,7 @@ interface AddReceivableDialogProps {
     client: string;
     status: "pending" | "received" | "overdue";
     isRecurring?: boolean;
-    frequency?: "monthly" | "quarterly" | "yearly";
+    frequency?: "weekly" | "monthly" | "yearly";
   }) => void;
 }
 
@@ -29,7 +29,7 @@ export function AddReceivableDialog({ open, onOpenChange, onAdd }: AddReceivable
     client: string;
     status: "pending" | "received" | "overdue";
     isRecurring: boolean;
-    frequency: "monthly" | "quarterly" | "yearly";
+    frequency: "weekly" | "monthly" | "yearly";
   }>({
     description: "",
     amount: "",
@@ -154,15 +154,15 @@ export function AddReceivableDialog({ open, onOpenChange, onAdd }: AddReceivable
               <Select 
                 value={formData.frequency} 
                 onValueChange={(value) => 
-                  setFormData({ ...formData, frequency: value as "monthly" | "quarterly" | "yearly" })
+                  setFormData({ ...formData, frequency: value as "weekly" | "monthly" | "yearly" })
                 }
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="weekly">Semanal</SelectItem>
                   <SelectItem value="monthly">Mensal</SelectItem>
-                  <SelectItem value="quarterly">Trimestral</SelectItem>
                   <SelectItem value="yearly">Anual</SelectItem>
                 </SelectContent>
               </Select>
