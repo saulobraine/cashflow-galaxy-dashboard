@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Calendar, DollarSign, Repeat, Clock } from "lucide-react";
+import { Plus, Calendar, DollarSign, Repeat, Clock, Edit } from "lucide-react";
 import { AddRecurringPaymentDialog } from "./AddRecurringPaymentDialog";
+import { EditRecurringPaymentDialog } from "./EditRecurringPaymentDialog";
 
 interface RecurringPayment {
   id: string;
@@ -13,6 +14,7 @@ interface RecurringPayment {
   nextPayment: string;
   category: string;
   isActive: boolean;
+  envelope?: string;
 }
 
 export function RecurringPaymentsManager() {
@@ -38,6 +40,7 @@ export function RecurringPaymentsManager() {
   ]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingPayment, setEditingPayment] = useState<RecurringPayment | null>(null);
 
   const addPayment = (payment: Omit<RecurringPayment, "id">) => {
     const newPayment = {
@@ -168,8 +171,13 @@ export function RecurringPaymentsManager() {
                       {getFrequencyLabel(payment.frequency)}
                     </Badge>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    {payment.category}
+                  <div className="text-sm text-muted-foreground flex items-center gap-2">
+                    <span>{payment.category}</span>
+                    {payment.envelope && (
+                      <Badge variant="outline" className="text-xs">
+                        {payment.envelope}
+                      </Badge>
+                    )}
                   </div>
                 </div>
                 <div className="text-right space-y-1">
@@ -181,7 +189,14 @@ export function RecurringPaymentsManager() {
                     {formatDate(payment.nextPayment)}
                   </div>
                 </div>
-                <div className="ml-4">
+                <div className="ml-4 flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEditingPayment(payment)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
@@ -200,6 +215,18 @@ export function RecurringPaymentsManager() {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         onAdd={addPayment}
+      />
+
+      <EditRecurringPaymentDialog
+        payment={editingPayment}
+        open={!!editingPayment}
+        onOpenChange={(open) => !open && setEditingPayment(null)}
+        onSave={(updatedPayment) => {
+          setPayments(payments.map(p => 
+            p.id === updatedPayment.id ? updatedPayment : p
+          ));
+          setEditingPayment(null);
+        }}
       />
     </div>
   );

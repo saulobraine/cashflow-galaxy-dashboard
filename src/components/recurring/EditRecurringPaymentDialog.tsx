@@ -1,26 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
 
-interface AddRecurringPaymentDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onAdd: (payment: {
-    description: string;
-    amount: number;
-    frequency: "monthly" | "quarterly" | "yearly";
-    nextPayment: string;
-    category: string;
-    isActive: boolean;
-    envelope?: string;
-  }) => void;
+interface RecurringPayment {
+  id: string;
+  description: string;
+  amount: number;
+  frequency: "monthly" | "quarterly" | "yearly";
+  nextPayment: string;
+  category: string;
+  isActive: boolean;
+  envelope?: string;
 }
 
-export function AddRecurringPaymentDialog({ open, onOpenChange, onAdd }: AddRecurringPaymentDialogProps) {
+interface EditRecurringPaymentDialogProps {
+  payment: RecurringPayment | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave: (payment: RecurringPayment) => void;
+}
+
+export function EditRecurringPaymentDialog({ 
+  payment, 
+  open, 
+  onOpenChange, 
+  onSave 
+}: EditRecurringPaymentDialogProps) {
   const [formData, setFormData] = useState<{
     description: string;
     amount: string;
@@ -44,10 +53,27 @@ export function AddRecurringPaymentDialog({ open, onOpenChange, onAdd }: AddRecu
     "Entretenimento", "Alimentação", "Seguros", "Outros"
   ];
 
+  useEffect(() => {
+    if (payment) {
+      setFormData({
+        description: payment.description,
+        amount: payment.amount.toString(),
+        frequency: payment.frequency,
+        nextPayment: payment.nextPayment,
+        category: payment.category,
+        isActive: payment.isActive,
+        envelope: payment.envelope || ""
+      });
+    }
+  }, [payment]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!payment) return;
+
     if (formData.description && formData.amount && formData.nextPayment && formData.category && formData.envelope) {
-      onAdd({
+      const updatedPayment = {
+        ...payment,
         description: formData.description,
         amount: parseFloat(formData.amount),
         frequency: formData.frequency,
@@ -55,25 +81,20 @@ export function AddRecurringPaymentDialog({ open, onOpenChange, onAdd }: AddRecu
         category: formData.category,
         isActive: formData.isActive,
         envelope: formData.envelope
-      });
-      setFormData({
-        description: "",
-        amount: "",
-        frequency: "monthly",
-        nextPayment: "",
-        category: "",
-        isActive: true,
-        envelope: ""
-      });
-      onOpenChange(false);
+      };
+      
+      onSave(updatedPayment);
+      toast.success("Pagamento recorrente atualizado com sucesso!");
     }
   };
+
+  if (!payment) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Novo Pagamento Recorrente</DialogTitle>
+          <DialogTitle>Editar Pagamento Recorrente</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -175,7 +196,7 @@ export function AddRecurringPaymentDialog({ open, onOpenChange, onAdd }: AddRecu
               type="submit"
               className="flex-1 purple-gradient shadow-purple-glow"
             >
-              Adicionar
+              Salvar
             </Button>
           </div>
         </form>

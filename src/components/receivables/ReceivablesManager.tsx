@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Plus, Calendar, DollarSign, User, Clock, Search, RefreshCw, Repeat } from "lucide-react";
+import { Plus, Calendar, DollarSign, User, Clock, Search, RefreshCw, Repeat, Edit } from "lucide-react";
 import { AddReceivableDialog } from "./AddReceivableDialog";
+import { EditReceivableDialog } from "./EditReceivableDialog";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 interface Receivable {
@@ -16,6 +17,7 @@ interface Receivable {
   status: "pending" | "received" | "overdue";
   isRecurring?: boolean;
   frequency?: "weekly" | "monthly" | "yearly";
+  envelope?: string;
 }
 
 export function ReceivablesManager() {
@@ -28,7 +30,8 @@ export function ReceivablesManager() {
       client: "Empresa ABC",
       status: "pending",
       isRecurring: true,
-      frequency: "monthly"
+      frequency: "monthly",
+      envelope: "Prestação de Serviços"
     },
     {
       id: "2",
@@ -36,7 +39,8 @@ export function ReceivablesManager() {
       amount: 1800.00,
       dueDate: "2024-01-10",
       client: "Cliente XYZ",
-      status: "overdue"
+      status: "overdue",
+      envelope: "Consultoria"
     },
     {
       id: "3",
@@ -46,11 +50,13 @@ export function ReceivablesManager() {
       client: "Empresa DEF",
       status: "pending",
       isRecurring: true,
-      frequency: "weekly"
+      frequency: "weekly",
+      envelope: "Trabalho Extra"
     }
   ]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingReceivable, setEditingReceivable] = useState<Receivable | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -225,11 +231,25 @@ export function ReceivablesManager() {
                       <div className="text-lg font-semibold text-primary">
                         {formatCurrency(receivable.amount)}
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setEditingReceivable(receivable)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
                     </div>
                     <div className="text-sm text-muted-foreground flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
                       {formatDate(receivable.dueDate)}
                     </div>
+                    {receivable.envelope && (
+                      <div className="text-xs">
+                        <Badge variant="outline" className="text-xs">
+                          {receivable.envelope}
+                        </Badge>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))
@@ -277,6 +297,18 @@ export function ReceivablesManager() {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         onAdd={addReceivable}
+      />
+
+      <EditReceivableDialog
+        receivable={editingReceivable}
+        open={!!editingReceivable}
+        onOpenChange={(open) => !open && setEditingReceivable(null)}
+        onSave={(updatedReceivable) => {
+          setReceivables(receivables.map(r => 
+            r.id === updatedReceivable.id ? updatedReceivable : r
+          ));
+          setEditingReceivable(null);
+        }}
       />
     </div>
   );

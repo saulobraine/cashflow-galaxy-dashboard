@@ -1,16 +1,21 @@
 
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard, TrendingDown, TrendingUp, Search } from "lucide-react";
+import { CreditCard, TrendingDown, TrendingUp, Search, Edit, Filter } from "lucide-react";
 import { AddTransactionDialog } from "@/components/transactions/AddTransactionDialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
+import { EditTransactionDialog } from "@/components/transactions/EditTransactionDialog";
 
 const TransactionsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedEnvelope, setSelectedEnvelope] = useState("all");
+  const [editingTransaction, setEditingTransaction] = useState<any>(null);
   const itemsPerPage = 5;
 
   const transactions = [
@@ -64,12 +69,16 @@ const TransactionsPage = () => {
     },
   ];
 
+  const envelopes = [...new Set(transactions.map(t => t.envelope))];
+
   const filteredTransactions = useMemo(() => {
-    return transactions.filter(transaction =>
-      transaction.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      transaction.envelope.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [transactions, searchTerm]);
+    return transactions.filter(transaction => {
+      const matchesSearch = transaction.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        transaction.envelope.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesEnvelope = selectedEnvelope === "all" || transaction.envelope === selectedEnvelope;
+      return matchesSearch && matchesEnvelope;
+    });
+  }, [transactions, searchTerm, selectedEnvelope]);
 
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -91,14 +100,30 @@ const TransactionsPage = () => {
         <Card>
           <CardHeader>
             <CardTitle>Histórico de Transações</CardTitle>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Pesquisar transações..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+            <div className="flex gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Pesquisar transações..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Select value={selectedEnvelope} onValueChange={setSelectedEnvelope}>
+                <SelectTrigger className="w-48">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Filtrar por envelope" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os Envelopes</SelectItem>
+                  {envelopes.map((envelope) => (
+                    <SelectItem key={envelope} value={envelope}>
+                      {envelope}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </CardHeader>
           <CardContent>
@@ -108,7 +133,7 @@ const TransactionsPage = () => {
                   key={transaction.id}
                   className="flex items-center justify-between p-4 border rounded-lg"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 flex-1">
                     {transaction.type === "credit" ? (
                       <div className="p-2 bg-green-100 rounded-full">
                         <TrendingUp className="h-4 w-4 text-green-600" />
@@ -130,14 +155,23 @@ const TransactionsPage = () => {
                       </div>
                     </div>
                   </div>
-                  <p className={`font-bold ${
-                    transaction.type === "credit" 
-                      ? "text-green-600" 
-                      : "text-red-600"
-                  }`}>
-                    {transaction.type === "credit" ? "+" : "-"}
-                    R$ {Math.abs(transaction.amount).toFixed(2)}
-                  </p>
+                  <div className="flex items-center gap-3">
+                    <p className={`font-bold ${
+                      transaction.type === "credit" 
+                        ? "text-green-600" 
+                        : "text-red-600"
+                    }`}>
+                      {transaction.type === "credit" ? "+" : "-"}
+                      R$ {Math.abs(transaction.amount).toFixed(2)}
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditingTransaction(transaction)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -176,6 +210,17 @@ const TransactionsPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      <EditTransactionDialog
+        transaction={editingTransaction}
+        open={!!editingTransaction}
+        onOpenChange={(open) => !open && setEditingTransaction(null)}
+        onSave={(updatedTransaction) => {
+          // Here you would update the transaction in your state
+          console.log("Updating transaction:", updatedTransaction);
+          setEditingTransaction(null);
+        }}
+      />
     </DashboardLayout>
   );
 };

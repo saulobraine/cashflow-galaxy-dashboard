@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,23 +6,33 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
-interface AddReceivableDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onAdd: (receivable: {
-    description: string;
-    amount: number;
-    dueDate: string;
-    client: string;
-    status: "pending" | "received" | "overdue";
-    isRecurring?: boolean;
-    frequency?: "weekly" | "monthly" | "yearly";
-    envelope?: string;
-  }) => void;
+interface Receivable {
+  id: string;
+  description: string;
+  amount: number;
+  dueDate: string;
+  client: string;
+  status: "pending" | "received" | "overdue";
+  isRecurring?: boolean;
+  frequency?: "weekly" | "monthly" | "yearly";
+  envelope?: string;
 }
 
-export function AddReceivableDialog({ open, onOpenChange, onAdd }: AddReceivableDialogProps) {
+interface EditReceivableDialogProps {
+  receivable: Receivable | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave: (receivable: Receivable) => void;
+}
+
+export function EditReceivableDialog({ 
+  receivable, 
+  open, 
+  onOpenChange, 
+  onSave 
+}: EditReceivableDialogProps) {
   const [formData, setFormData] = useState<{
     description: string;
     amount: string;
@@ -48,10 +58,28 @@ export function AddReceivableDialog({ open, onOpenChange, onAdd }: AddReceivable
     "Consultoria", "Freelance", "Investimentos", "Outros"
   ];
 
+  useEffect(() => {
+    if (receivable) {
+      setFormData({
+        description: receivable.description,
+        amount: receivable.amount.toString(),
+        dueDate: receivable.dueDate,
+        client: receivable.client,
+        status: receivable.status,
+        isRecurring: receivable.isRecurring || false,
+        frequency: receivable.frequency || "monthly",
+        envelope: receivable.envelope || ""
+      });
+    }
+  }, [receivable]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!receivable) return;
+
     if (formData.description && formData.amount && formData.dueDate && formData.client && formData.envelope) {
-      onAdd({
+      const updatedReceivable = {
+        ...receivable,
         description: formData.description,
         amount: parseFloat(formData.amount),
         dueDate: formData.dueDate,
@@ -60,26 +88,20 @@ export function AddReceivableDialog({ open, onOpenChange, onAdd }: AddReceivable
         isRecurring: formData.isRecurring,
         frequency: formData.isRecurring ? formData.frequency : undefined,
         envelope: formData.envelope
-      });
-      setFormData({
-        description: "",
-        amount: "",
-        dueDate: "",
-        client: "",
-        status: "pending",
-        isRecurring: false,
-        frequency: "monthly",
-        envelope: ""
-      });
-      onOpenChange(false);
+      };
+      
+      onSave(updatedReceivable);
+      toast.success("Conta a receber atualizada com sucesso!");
     }
   };
+
+  if (!receivable) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Nova Conta a Receber</DialogTitle>
+          <DialogTitle>Editar Conta a Receber</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -213,7 +235,7 @@ export function AddReceivableDialog({ open, onOpenChange, onAdd }: AddReceivable
               type="submit"
               className="flex-1 purple-gradient shadow-purple-glow"
             >
-              Adicionar
+              Salvar
             </Button>
           </div>
         </form>
