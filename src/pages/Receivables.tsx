@@ -1,5 +1,7 @@
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { ReceivablesManager } from "@/components/receivables/ReceivablesManager";
+import { ServicesManager } from "@/components/services/ServicesManager";
+import { ClientsManager } from "@/components/clients/ClientsManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ReceivablesPage() {
@@ -23,15 +25,11 @@ export default function ReceivablesPage() {
           </TabsContent>
           
           <TabsContent value="services" className="space-y-4">
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Funcionalidade de Serviços/Produtos em desenvolvimento</p>
-            </div>
+            <ServicesManager />
           </TabsContent>
           
           <TabsContent value="clients" className="space-y-4">
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Funcionalidade de Clientes em desenvolvimento</p>
-            </div>
+            <ClientsManager />
           </TabsContent>
         </Tabs>
       </div>
