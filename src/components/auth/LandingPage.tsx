@@ -50,7 +50,7 @@ export const LandingPage = () => {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </div>
-            <h1 className="text-xl font-bold">Finance Dashboard</h1>
+            <h1 className="text-xl font-bold">Meus Envelopes</h1>
           </div>
           <ThemeToggle />
         </header>
@@ -144,7 +144,7 @@ export const LandingPage = () => {
 
         {/* Footer */}
         <footer className="text-center text-muted-foreground">
-          <p>&copy; 2024 Finance Dashboard. Todos os direitos reservados.</p>
+          <p>&copy; 2024 Meus Envelopes. Todos os direitos reservados.</p>
         </footer>
       </div>
     </div>
