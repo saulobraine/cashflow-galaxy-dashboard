@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -25,6 +26,7 @@ const menuItems = [
 const UserDropdown = () => {
   const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const sharedAccounts = [
     { id: "1", name: "Empresa ABC Ltda", role: "Administrador", active: false },
@@ -78,17 +80,17 @@ const UserDropdown = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/avatars/01.png" alt="@usuario" />
-            <AvatarFallback>JS</AvatarFallback>
+            <AvatarImage src={user?.avatar} alt={`@${user?.name}`} />
+            <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
-            <p className="font-medium">João Silva</p>
+            <p className="font-medium">{user?.name}</p>
             <p className="w-[200px] truncate text-sm text-muted-foreground">
-              joao@exemplo.com
+              {user?.email}
             </p>
           </div>
         </div>
@@ -106,7 +108,7 @@ const UserDropdown = () => {
           <span>Integrações</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>
           <SignOut className="mr-2 h-4 w-4" />
           <span>Sair</span>
         </DropdownMenuItem>
@@ -266,20 +268,18 @@ const AppSidebar = () => {
 
 export const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-background">
-          <AppSidebar />
-          <main className="flex-1 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <SidebarTrigger />
-              <UserDropdown />
-            </div>
-            {children}
-          </main>
-          <FloatingMenu />
-        </div>
-      </SidebarProvider>
-    </ThemeProvider>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-background">
+        <AppSidebar />
+        <main className="flex-1 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <SidebarTrigger />
+            <UserDropdown />
+          </div>
+          {children}
+        </main>
+        <FloatingMenu />
+      </div>
+    </SidebarProvider>
   );
 };
