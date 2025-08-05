@@ -78,14 +78,15 @@ export const LandingPage = () => {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center hover-scale">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </div>
-            <h1 className="text-xl font-bold">Meus Envelopes</h1>
+            <h1 className="text-lg md:text-xl font-bold">Meus Envelopes</h1>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <Button
               onClick={loginWithGoogle}
               disabled={isLoading}
-              className="flex items-center gap-2 hover-scale"
+              className="flex items-center gap-1 md:gap-2 hover-scale text-sm md:text-base px-3 md:px-4"
               variant="outline"
+              size="sm"
             >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
