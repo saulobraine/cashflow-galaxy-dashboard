@@ -60,9 +60,9 @@ export const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <header className="flex justify-between items-center mb-16 animate-fade-in">
+      {/* Sticky Header with Glassmorphism */}
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/20 animate-fade-in">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center hover-scale">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
@@ -90,8 +90,11 @@ export const LandingPage = () => {
             </Button>
             <ThemeToggle />
           </div>
-        </header>
+        </div>
+      </header>
 
+      {/* Main Content with padding for sticky header */}
+      <div className="container mx-auto px-4 pt-28 pb-8">
         {/* Hero Section */}
         <div className="text-center mb-24 animate-fade-in">
           <div className="max-w-4xl mx-auto">
