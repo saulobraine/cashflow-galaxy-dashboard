@@ -3,6 +3,7 @@ import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard, TrendingDown, TrendingUp, Search, Edit, Filter } from "lucide-react";
 import { AddTransactionDialog } from "@/components/transactions/AddTransactionDialog";
+import { ImportTransactionsDialog } from "@/components/transactions/ImportTransactionsDialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
@@ -94,7 +95,10 @@ const TransactionsPage = () => {
               Acompanhe suas movimentações financeiras
             </p>
           </div>
-          <AddTransactionDialog />
+          <div className="flex gap-2">
+            <ImportTransactionsDialog />
+            <AddTransactionDialog />
+          </div>
         </div>
 
         <Card>
