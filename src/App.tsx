@@ -15,6 +15,9 @@ import RecurringPaymentsPage from "./pages/RecurringPayments";
 import ImportProgress from "./pages/ImportProgress";
 import ImportDetails from "./pages/ImportDetails";
 import ImportsPage from "./pages/Imports";
+import SharedOverviewPage from "./pages/SharedOverview";
+import SharedMembersPage from "./pages/SharedMembers";
+import SharedSettingsPage from "./pages/SharedSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +47,9 @@ const AppRoutes = () => {
       <Route path="/imports" element={<ImportsPage />} />
       <Route path="/import/:jobId" element={<ImportProgress />} />
       <Route path="/import/:jobId/details" element={<ImportDetails />} />
+      <Route path="/shared/overview" element={<SharedOverviewPage />} />
+      <Route path="/shared/members" element={<SharedMembersPage />} />
+      <Route path="/shared/settings" element={<SharedSettingsPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
