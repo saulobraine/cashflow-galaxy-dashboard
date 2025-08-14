@@ -14,6 +14,7 @@ import ReceivablesPage from "./pages/Receivables";
 import RecurringPaymentsPage from "./pages/RecurringPayments";
 import ImportProgress from "./pages/ImportProgress";
 import ImportDetails from "./pages/ImportDetails";
+import ImportsPage from "./pages/Imports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const AppRoutes = () => {
       <Route path="/categories" element={<Categories />} />
       <Route path="/receivables" element={<ReceivablesPage />} />
       <Route path="/recurring-payments" element={<RecurringPaymentsPage />} />
+      <Route path="/imports" element={<ImportsPage />} />
       <Route path="/import/:jobId" element={<ImportProgress />} />
       <Route path="/import/:jobId/details" element={<ImportDetails />} />
       <Route path="*" element={<NotFound />} />

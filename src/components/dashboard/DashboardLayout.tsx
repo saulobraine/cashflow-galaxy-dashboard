@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { ChartBar, CreditCard, FolderOpen, Receipt, Repeat, User, Gear, SignOut, ArrowsLeftRight, Users as UsersIcon, Buildings } from "phosphor-react";
+import { ChartBar, CreditCard, FolderOpen, Receipt, Repeat, User, Gear, SignOut, ArrowsLeftRight, Users as UsersIcon, Buildings, Download } from "phosphor-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { ThemeProvider } from "next-themes";
 import { FloatingMenu } from "@/components/ui/floating-menu";
@@ -106,6 +106,10 @@ const UserDropdown = () => {
         <DropdownMenuItem>
           <Receipt className="mr-2 h-4 w-4" />
           <span>Integrações</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate('/imports')}>
+          <Download className="mr-2 h-4 w-4" />
+          <span>Minhas importações</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}>
