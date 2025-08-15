@@ -6,43 +6,43 @@ import { useState } from "react";
 
 const periodsData = {
   "this-month": [
-    { name: "Sem 1", entradas: 15000, saidas: 8000 },
-    { name: "Sem 2", entradas: 18000, saidas: 12000 },
-    { name: "Sem 3", entradas: 22000, saidas: 9000 },
-    { name: "Sem 4", entradas: 25000, saidas: 11000 },
+    { name: "Sem 1", orcamento: 15000, gasto: 8000 },
+    { name: "Sem 2", orcamento: 18000, gasto: 12000 },
+    { name: "Sem 3", orcamento: 22000, gasto: 9000 },
+    { name: "Sem 4", orcamento: 25000, gasto: 11000 },
   ],
   "last-month": [
-    { name: "Sem 1", entradas: 12000, saidas: 7000 },
-    { name: "Sem 2", entradas: 16000, saidas: 10000 },
-    { name: "Sem 3", entradas: 19000, saidas: 8500 },
-    { name: "Sem 4", entradas: 21000, saidas: 9500 },
+    { name: "Sem 1", orcamento: 12000, gasto: 7000 },
+    { name: "Sem 2", orcamento: 16000, gasto: 10000 },
+    { name: "Sem 3", orcamento: 19000, gasto: 8500 },
+    { name: "Sem 4", orcamento: 21000, gasto: 9500 },
   ],
   "6-months": [
-    { name: "Fev", entradas: 72000, saidas: 32000 },
-    { name: "Mar", entradas: 69000, saidas: 29000 },
-    { name: "Abr", entradas: 83000, saidas: 35000 },
-    { name: "Mai", entradas: 78000, saidas: 31000 },
-    { name: "Jun", entradas: 91000, saidas: 38000 },
-    { name: "Jul", entradas: 95000, saidas: 40000 },
+    { name: "Fev", orcamento: 72000, gasto: 32000 },
+    { name: "Mar", orcamento: 69000, gasto: 29000 },
+    { name: "Abr", orcamento: 83000, gasto: 35000 },
+    { name: "Mai", orcamento: 78000, gasto: 31000 },
+    { name: "Jun", orcamento: 91000, gasto: 38000 },
+    { name: "Jul", orcamento: 95000, gasto: 40000 },
   ],
   "12-months": [
-    { name: "Ago", entradas: 45000, saidas: 20000 },
-    { name: "Set", entradas: 52000, saidas: 22000 },
-    { name: "Out", entradas: 48000, saidas: 21000 },
-    { name: "Nov", entradas: 58000, saidas: 25000 },
-    { name: "Dez", entradas: 62000, saidas: 28000 },
-    { name: "Jan", entradas: 65000, saidas: 30000 },
-    { name: "Fev", entradas: 72000, saidas: 32000 },
-    { name: "Mar", entradas: 69000, saidas: 29000 },
-    { name: "Abr", entradas: 83000, saidas: 35000 },
-    { name: "Mai", entradas: 78000, saidas: 31000 },
-    { name: "Jun", entradas: 91000, saidas: 38000 },
-    { name: "Jul", entradas: 95000, saidas: 40000 },
+    { name: "Ago", orcamento: 45000, gasto: 20000 },
+    { name: "Set", orcamento: 52000, gasto: 22000 },
+    { name: "Out", orcamento: 48000, gasto: 21000 },
+    { name: "Nov", orcamento: 58000, gasto: 25000 },
+    { name: "Dez", orcamento: 62000, gasto: 28000 },
+    { name: "Jan", orcamento: 65000, gasto: 30000 },
+    { name: "Fev", orcamento: 72000, gasto: 32000 },
+    { name: "Mar", orcamento: 69000, gasto: 29000 },
+    { name: "Abr", orcamento: 83000, gasto: 35000 },
+    { name: "Mai", orcamento: 78000, gasto: 31000 },
+    { name: "Jun", orcamento: 91000, gasto: 38000 },
+    { name: "Jul", orcamento: 95000, gasto: 40000 },
   ],
   "all-time": [
-    { name: "2022", entradas: 580000, saidas: 240000 },
-    { name: "2023", entradas: 720000, saidas: 310000 },
-    { name: "2024", entradas: 890000, saidas: 380000 },
+    { name: "2022", orcamento: 580000, gasto: 240000 },
+    { name: "2023", orcamento: 720000, gasto: 310000 },
+    { name: "2024", orcamento: 890000, gasto: 380000 },
   ],
 };
 
@@ -53,7 +53,7 @@ export const FinancialChart = () => {
   return (
     <Card className="p-6 mt-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold">Evolução Patrimonial</h3>
+        <h3 className="text-lg font-semibold">Evolução de Envelopes</h3>
         <Select value={selectedPeriod} onValueChange={(value: keyof typeof periodsData) => setSelectedPeriod(value)}>
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="Selecione o período" />
@@ -79,20 +79,20 @@ export const FinancialChart = () => {
             <Tooltip
               formatter={(value: number, name: string) => [
                 `R$ ${value.toLocaleString()}`, 
-                name === "entradas" ? "Entradas" : "Saídas"
+                name === "orcamento" ? "Orçamento" : "Gasto"
               ]}
             />
             <Line
               type="monotone"
-              dataKey="entradas"
-              stroke="#22c55e"
+              dataKey="orcamento"
+              stroke="#3b82f6"
               strokeWidth={2}
-              dot={{ fill: "#22c55e" }}
+              dot={{ fill: "#3b82f6" }}
               activeDot={{ r: 8 }}
             />
             <Line
               type="monotone"
-              dataKey="saidas"
+              dataKey="gasto"
               stroke="#ef4444"
               strokeWidth={2}
               dot={{ fill: "#ef4444" }}
