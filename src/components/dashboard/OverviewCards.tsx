@@ -1,20 +1,20 @@
 
 import { Card } from "@/components/ui/card";
-import { DollarSign, TrendingUp, CreditCard, Receipt } from "lucide-react";
+import { CurrencyDollar, TrendUp, CreditCard, Receipt } from "phosphor-react";
 
 const metrics = [
   {
     title: "Saldo Total",
     value: "R$ 84.950,00",
     change: "+12,3%",
-    icon: DollarSign,
+    icon: CurrencyDollar,
     trend: "up",
   },
   {
     title: "Entradas",
     value: "R$ 104.950,00",
     change: "+15,2%",
-    icon: TrendingUp,
+    icon: TrendUp,
     trend: "up",
   },
   {

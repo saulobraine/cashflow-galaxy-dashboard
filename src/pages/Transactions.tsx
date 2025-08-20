@@ -1,7 +1,7 @@
 
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard, TrendingDown, TrendingUp, Search, Edit, Filter } from "lucide-react";
+import { CreditCard, TrendDown, TrendUp, MagnifyingGlass, PencilSimple, Funnel } from "phosphor-react";
 import { AddTransactionDialog } from "@/components/transactions/AddTransactionDialog";
 import { ImportTransactionsDialog } from "@/components/transactions/ImportTransactionsDialog";
 import { Input } from "@/components/ui/input";
@@ -106,7 +106,7 @@ const TransactionsPage = () => {
             <CardTitle>Histórico de Transações</CardTitle>
             <div className="flex gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <MagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
                   placeholder="Pesquisar transações..."
                   value={searchTerm}
@@ -116,7 +116,7 @@ const TransactionsPage = () => {
               </div>
               <Select value={selectedEnvelope} onValueChange={setSelectedEnvelope}>
                 <SelectTrigger className="w-48">
-                  <Filter className="h-4 w-4 mr-2" />
+                  <Funnel className="h-4 w-4 mr-2" />
                   <SelectValue placeholder="Filtrar por envelope" />
                 </SelectTrigger>
                 <SelectContent>
@@ -140,11 +140,11 @@ const TransactionsPage = () => {
                   <div className="flex items-center gap-4 flex-1">
                     {transaction.type === "credit" ? (
                       <div className="p-2 bg-green-100 rounded-full">
-                        <TrendingUp className="h-4 w-4 text-green-600" />
+                        <TrendUp className="h-4 w-4 text-green-600" />
                       </div>
                     ) : (
                       <div className="p-2 bg-red-100 rounded-full">
-                        <TrendingDown className="h-4 w-4 text-red-600" />
+                        <TrendDown className="h-4 w-4 text-red-600" />
                       </div>
                     )}
                     <div>
@@ -173,7 +173,7 @@ const TransactionsPage = () => {
                       size="sm"
                       onClick={() => setEditingTransaction(transaction)}
                     >
-                      <Edit className="h-4 w-4" />
+                      <PencilSimple className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>

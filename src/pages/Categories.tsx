@@ -8,44 +8,85 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Envelope, Plus, X } from "phosphor-react";
+import { Envelope as EnvelopeIcon, Plus, X, PencilSimple } from "phosphor-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import { AddEnvelopeDialog } from "@/components/envelopes/AddEnvelopeDialog";
+import { EditEnvelopeDialog } from "@/components/envelopes/EditEnvelopeDialog";
+
+interface Envelope {
+  id: number;
+  name: string;
+  valueType: "percentage" | "fixed";
+  value: number;
+  parentEnvelope?: string;
+}
 
 const Categories = () => {
-  const [newEnvelope, setNewEnvelope] = useState("");
-  const [newValueType, setNewValueType] = useState<"percentage" | "fixed">("percentage");
-  const [newValue, setNewValue] = useState("");
-  const [envelopes, setEnvelopes] = useState([
-    { id: 1, name: "Alimentação", valueType: "percentage" as const, value: 30 },
-    { id: 2, name: "Transporte", valueType: "percentage" as const, value: 15 },
-    { id: 3, name: "Lazer", valueType: "fixed" as const, value: 500 },
-    { id: 4, name: "Salário", valueType: "fixed" as const, value: 5000 },
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingEnvelope, setEditingEnvelope] = useState<Envelope | null>(null);
+  const [envelopes, setEnvelopes] = useState<Envelope[]>([
+    { id: 1, name: "Remuneração", valueType: "fixed", value: 5000 },
+    { id: 2, name: "Alimentação", valueType: "percentage", value: 30, parentEnvelope: "Remuneração" },
+    { id: 3, name: "Transporte", valueType: "percentage", value: 15, parentEnvelope: "Remuneração" },
+    { id: 4, name: "Lazer", valueType: "fixed", value: 500 },
   ]);
   const { toast } = useToast();
 
-  const handleAddEnvelope = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newEnvelope.trim() && newValue.trim()) {
-      setEnvelopes([
-        ...envelopes,
-        { 
-          id: envelopes.length + 1, 
-          name: newEnvelope,
-          valueType: newValueType,
-          value: parseFloat(newValue)
-        },
-      ]);
-      setNewEnvelope("");
-      setNewValue("");
-      toast({
-        title: "Envelope adicionado",
-        description: "O envelope foi criado com sucesso.",
-      });
+  // Mock transactions to calculate current values
+  const mockTransactions = [
+    { envelope: "Alimentação", amount: 800, type: "expense" },
+    { envelope: "Transporte", amount: 450, type: "expense" },
+    { envelope: "Lazer", amount: 200, type: "expense" },
+    { envelope: "Remuneração", amount: 5000, type: "income" },
+  ];
+
+  const calculateCurrentValue = (envelope: Envelope) => {
+    const transactions = mockTransactions.filter(t => t.envelope === envelope.name);
+    const total = transactions.reduce((sum, t) => sum + (t.type === "income" ? t.amount : -t.amount), 0);
+    return total;
+  };
+
+  const calculateBudgetValue = (envelope: Envelope) => {
+    if (envelope.valueType === "fixed") {
+      return envelope.value;
+    } else {
+      // Find parent envelope
+      const parentEnv = envelopes.find(e => e.name === envelope.parentEnvelope);
+      if (parentEnv) {
+        const parentValue = parentEnv.valueType === "fixed" ? parentEnv.value : calculateBudgetValue(parentEnv);
+        return (parentValue * envelope.value) / 100;
+      }
+      return envelope.value;
     }
+  };
+
+  const handleAddEnvelope = (envelopeData: {
+    name: string;
+    valueType: "percentage" | "fixed";
+    value: number;
+    parentEnvelope?: string;
+  }) => {
+    const newEnvelope: Envelope = {
+      id: envelopes.length + 1,
+      ...envelopeData,
+    };
+    setEnvelopes([...envelopes, newEnvelope]);
+    setAddDialogOpen(false);
+  };
+
+  const handleEditEnvelope = (envelope: Envelope) => {
+    setEditingEnvelope(envelope);
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveEnvelope = (updatedEnvelope: Envelope) => {
+    setEnvelopes(envelopes.map(env => 
+      env.id === updatedEnvelope.id ? updatedEnvelope : env
+    ));
+    setEditDialogOpen(false);
+    setEditingEnvelope(null);
   };
 
   const handleDeleteEnvelope = (id: number) => {
@@ -66,91 +107,103 @@ const Categories = () => {
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Adicionar Envelope</CardTitle>
-            <CardDescription>
-              Crie um novo envelope com valor fixo ou percentual
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleAddEnvelope} className="space-y-4">
-              <div className="flex gap-4">
-                <Input
-                  placeholder="Nome do envelope"
-                  value={newEnvelope}
-                  onChange={(e) => setNewEnvelope(e.target.value)}
-                  className="flex-1"
-                />
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <Label htmlFor="valueType">Tipo de Valor</Label>
-                  <Select value={newValueType} onValueChange={(value) => setNewValueType(value as "percentage" | "fixed")}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="percentage">Percentual (%)</SelectItem>
-                      <SelectItem value="fixed">Valor Fixo (R$)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex-1">
-                  <Label htmlFor="value">Valor</Label>
-                  <Input
-                    id="value"
-                    type="number"
-                    step="0.01"
-                    placeholder={newValueType === "percentage" ? "0%" : "R$ 0,00"}
-                    value={newValue}
-                    onChange={(e) => setNewValue(e.target.value)}
-                  />
-                </div>
-              </div>
-              <Button type="submit" className="purple-gradient shadow-purple-glow">
-                <Plus className="mr-2" />
-                Adicionar
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-bold">Envelopes Existentes</h2>
+            <p className="text-muted-foreground">
+              Gerencie seus envelopes orçamentários
+            </p>
+          </div>
+          <Button onClick={() => setAddDialogOpen(true)} className="purple-gradient shadow-purple-glow">
+            <Plus className="mr-2 h-4 w-4" />
+            Novo Envelope
+          </Button>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Envelopes Existentes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {envelopes.map((envelope) => (
-                <div
-                  key={envelope.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <Envelope className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <span className="font-medium">{envelope.name}</span>
-                      <div className="text-sm text-muted-foreground">
-                        {envelope.valueType === "percentage" 
-                          ? `${envelope.value}%` 
-                          : `R$ ${envelope.value.toFixed(2)}`
-                        }
-                      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {envelopes.map((envelope) => {
+            const currentValue = calculateCurrentValue(envelope);
+            const budgetValue = calculateBudgetValue(envelope);
+            const percentage = budgetValue > 0 ? (Math.abs(currentValue) / budgetValue) * 100 : 0;
+            
+            return (
+              <Card key={envelope.id} className="relative">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <EnvelopeIcon className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => handleEditEnvelope(envelope)}
+                      >
+                        <PencilSimple className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-destructive hover:text-destructive"
+                        onClick={() => handleDeleteEnvelope(envelope.id)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDeleteEnvelope(envelope.id)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                  <div>
+                    <CardTitle className="text-lg">{envelope.name}</CardTitle>
+                    <div className="text-sm text-muted-foreground">
+                      {envelope.valueType === "percentage" 
+                        ? `${envelope.value}% de ${envelope.parentEnvelope}`
+                        : `Valor fixo`
+                      }
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Orçamento:</span>
+                      <span className="font-medium">R$ {budgetValue.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Atual:</span>
+                      <span className={`font-medium ${currentValue < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                        R$ {Math.abs(currentValue).toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="w-full bg-secondary rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full transition-all ${
+                          percentage > 100 ? 'bg-red-500' : percentage > 80 ? 'bg-yellow-500' : 'bg-green-500'
+                        }`}
+                        style={{ width: `${Math.min(percentage, 100)}%` }}
+                      />
+                    </div>
+                    <div className="text-xs text-muted-foreground text-center">
+                      {percentage.toFixed(1)}% utilizado
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        <AddEnvelopeDialog
+          open={addDialogOpen}
+          onOpenChange={setAddDialogOpen}
+          onAdd={handleAddEnvelope}
+          envelopes={envelopes}
+        />
+
+        <EditEnvelopeDialog
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+          envelope={editingEnvelope}
+          onSave={handleSaveEnvelope}
+          envelopes={envelopes}
+        />
       </div>
     </DashboardLayout>
   );

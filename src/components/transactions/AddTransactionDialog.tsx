@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { Plus, TrendingUp, TrendingDown } from "lucide-react";
+import { Plus, TrendUp, TrendDown } from "phosphor-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -119,7 +119,7 @@ export function AddTransactionDialog() {
                   )}
                   onClick={() => setType("expense")}
                 >
-                  <TrendingDown className="mr-2 h-4 w-4" />
+                  <TrendDown className="mr-2 h-4 w-4" />
                   Saída
                 </Button>
                 <Button
@@ -131,7 +131,7 @@ export function AddTransactionDialog() {
                   )}
                   onClick={() => setType("income")}
                 >
-                  <TrendingUp className="mr-2 h-4 w-4" />
+                  <TrendUp className="mr-2 h-4 w-4" />
                   Entrada
                 </Button>
               </div>

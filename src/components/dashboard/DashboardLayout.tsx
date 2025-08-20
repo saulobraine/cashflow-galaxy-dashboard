@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { ChartBar, CreditCard, FolderOpen, Receipt, Repeat, User, Gear, SignOut, ArrowsLeftRight, Users as UsersIcon, Buildings, Download } from "phosphor-react";
+import { ChartBar, CreditCard, FolderOpen, Receipt, Repeat, User, Gear, SignOut, ArrowsLeftRight, Users as UsersIcon, Buildings, Download, TrendUp, Gear as SettingsIcon, Users } from "phosphor-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { ThemeProvider } from "next-themes";
 import { FloatingMenu } from "@/components/ui/floating-menu";
@@ -13,12 +13,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { TrendingUp, Settings, Users, Building } from "lucide-react";
 
 const menuItems = [
   { icon: ChartBar, label: "Visão Geral", path: "/" },
-  { icon: CreditCard, label: "Transações", path: "/transactions" },
   { icon: FolderOpen, label: "Envelopes", path: "/categories" },
+  { icon: CreditCard, label: "Transações", path: "/transactions" },
   { icon: Receipt, label: "Contas a Receber", path: "/receivables" },
   { icon: Repeat, label: "Pagamentos Recorrentes", path: "/recurring-payments" },
 ];
@@ -135,9 +134,9 @@ const SharedAccountSidebar = () => {
   };
 
   const sharedMenuItems = [
-    { name: "Visão Geral", path: "/shared/overview", icon: TrendingUp },
+    { name: "Visão Geral", path: "/shared/overview", icon: TrendUp },
     { name: "Membros", path: "/shared/members", icon: Users },
-    { name: "Configurações", path: "/shared/settings", icon: Settings },
+    { name: "Configurações", path: "/shared/settings", icon: SettingsIcon },
   ];
 
   if (!hasSharedAccount) return null;
@@ -149,7 +148,7 @@ const SharedAccountSidebar = () => {
           <TooltipProvider>
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <Building className="h-4 w-4 text-primary" />
+                <Buildings className="h-4 w-4 text-primary" />
                 <span className="text-sm font-medium">Conta Compartilhada</span>
               </div>
               
@@ -190,7 +189,7 @@ const SharedAccountSidebar = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="sm" className="w-full p-2">
-                  <Building className="h-4 w-4" />
+                  <Buildings className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right">
