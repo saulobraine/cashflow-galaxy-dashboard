@@ -1,7 +1,8 @@
 
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { OverviewCards } from "@/components/dashboard/OverviewCards";
-import { FinancialChart } from "@/components/dashboard/FinancialChart";
+import { EnvelopesBarChart } from "@/components/dashboard/EnvelopesBarChart";
+import { CashFlowAreaChart } from "@/components/dashboard/CashFlowAreaChart";
 
 const Index = () => {
   return (
@@ -14,7 +15,10 @@ const Index = () => {
           </p>
         </div>
         <OverviewCards />
-        <FinancialChart />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <EnvelopesBarChart />
+          <CashFlowAreaChart />
+        </div>
       </div>
     </DashboardLayout>
   );
