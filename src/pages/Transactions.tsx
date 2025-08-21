@@ -1,7 +1,7 @@
 
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard, TrendDown, TrendUp, MagnifyingGlass, PencilSimple, Funnel } from "phosphor-react";
+import { CreditCard, TrendDown, TrendUp, MagnifyingGlass, PencilSimple, Funnel, Trash } from "phosphor-react";
 import { AddTransactionDialog } from "@/components/transactions/AddTransactionDialog";
 import { ImportTransactionsDialog } from "@/components/transactions/ImportTransactionsDialog";
 import { Input } from "@/components/ui/input";
@@ -11,12 +11,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
 import { EditTransactionDialog } from "@/components/transactions/EditTransactionDialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const TransactionsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedEnvelope, setSelectedEnvelope] = useState("all");
   const [editingTransaction, setEditingTransaction] = useState<any>(null);
+  const [deletingTransaction, setDeletingTransaction] = useState<any>(null);
+  const { toast } = useToast();
   const itemsPerPage = 5;
 
   const transactions = [
@@ -84,6 +88,18 @@ const TransactionsPage = () => {
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentTransactions = filteredTransactions.slice(startIndex, startIndex + itemsPerPage);
+
+  const handleDeleteTransaction = () => {
+    if (deletingTransaction) {
+      // Here you would delete the transaction from your state
+      console.log("Deleting transaction:", deletingTransaction);
+      toast({
+        title: "Transação excluída",
+        description: "A transação foi removida com sucesso.",
+      });
+      setDeletingTransaction(null);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -175,6 +191,13 @@ const TransactionsPage = () => {
                     >
                       <PencilSimple className="h-4 w-4" />
                     </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDeletingTransaction(transaction)}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -225,6 +248,24 @@ const TransactionsPage = () => {
           setEditingTransaction(null);
         }}
       />
+
+      <AlertDialog open={!!deletingTransaction} onOpenChange={(open) => !open && setDeletingTransaction(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir Transação</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza de que deseja excluir a transação "{deletingTransaction?.description}"? 
+              Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteTransaction}>
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </DashboardLayout>
   );
 };
