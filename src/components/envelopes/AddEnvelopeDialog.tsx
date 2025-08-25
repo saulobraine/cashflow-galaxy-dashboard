@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { Plus } from "phosphor-react";
+import { Plus, Percent, CurrencyCircleDollar } from "phosphor-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface AddEnvelopeDialogProps {
@@ -102,16 +102,27 @@ export function AddEnvelopeDialog({ open, onOpenChange, onAdd, envelopes }: AddE
             </div>
             
             <div>
-              <Label htmlFor="valueType">Tipo de Valor *</Label>
-              <Select value={valueType} onValueChange={(value) => setValueType(value as "percentage" | "fixed")}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="percentage">Percentual (%)</SelectItem>
-                  <SelectItem value="fixed">Valor Fixo (R$)</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label>Tipo de Valor *</Label>
+              <div className="flex gap-2 mt-2">
+                <Button
+                  type="button"
+                  variant={valueType === "percentage" ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setValueType("percentage")}
+                >
+                  <Percent className="mr-2 h-4 w-4" />
+                  Percentual (%)
+                </Button>
+                <Button
+                  type="button"
+                  variant={valueType === "fixed" ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setValueType("fixed")}
+                >
+                  <CurrencyCircleDollar className="mr-2 h-4 w-4" />
+                  Valor Fixo (R$)
+                </Button>
+              </div>
             </div>
 
             {valueType === "percentage" && (
